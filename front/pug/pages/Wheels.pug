@@ -1,0 +1,158 @@
+-
+	const fortunePrizes = [
+		{ label: '700 000 ₴', kind: 'cash', value: 700000, spin: 1 },
+		{ label: '150 FS', kind: 'spins', value: 150 },
+		{ label: '100 000 ₴', kind: 'cash', value: 100000 },
+		{ label: '50 FS', kind: 'spins', value: 50 },
+		{ label: '50 000 ₴', kind: 'cash', value: 50000 },
+		{ label: '100 FS', kind: 'spins', value: 100 },
+		{ label: '150 000 ₴', kind: 'cash', value: 150000 },
+		{ label: '80 FS', kind: 'spins', value: 80 },
+		{ label: '200 000 ₴', kind: 'cash', value: 200000 },
+		{ label: '200 FS', kind: 'spins', value: 200 },
+		{ label: '10 000 ₴', kind: 'cash', value: 10000 },
+		{ label: '120 FS', kind: 'spins', value: 120 },
+		{ label: '80 000 ₴', kind: 'cash', value: 80000 },
+		{ label: '180 FS', kind: 'spins', value: 180 },
+		{ label: '15 000 ₴', kind: 'cash', value: 15000 },
+		{ label: '600 FS', kind: 'spins', value: 600, spin: 2 }
+	]
+	const fortuneStep = 360 / fortunePrizes.length
+	const fortunePoint = angle => [350 + 315 * Math.sin(angle * Math.PI / 180), 350 - 315 * Math.cos(angle * Math.PI / 180)]
+
+section.fortune.section(aria-labelledby="fortune-title" data-duration="4300")
+	.fortune__body
+		.fortune__info
+			.fortune__eyebrow Interactive demo
+			h2.fortune__title.title#fortune-title Spin & win
+			p.fortune__subtitle Two spins. One final bonus.<br>See where the wheel takes you.
+			.fortune__steps(aria-label="Spin progress")
+				.fortune__step.is-current(data-step="0") 01 <span>First spin</span>
+				.fortune__step(data-step="1") 02 <span>Second spin</span>
+			button.fortune__btn.btn(type="button") Spin the wheel
+			p.fortune__attempts(aria-live="polite") 2 spins available
+			button.fortune__restart(type="button" hidden) Restart demo
+		.fortune__visual
+			.fortune__glow(aria-hidden="true")
+			img.fortune__decor.fortune__decor_coin(src="img/fortune-coin.svg" alt="" aria-hidden="true" loading="lazy")
+			img.fortune__decor.fortune__decor_gift(src="img/fortune-gift.svg" alt="" aria-hidden="true" loading="lazy")
+			.fortune__wheel
+				svg.fortune__disk(viewBox="0 0 700 700" role="img" aria-label="Prize wheel with cash and free-spin sectors")
+					circle(cx="350" cy="350" r="317")
+					g.fortune__sectors
+						each prize, index in fortunePrizes
+							- const start = fortunePoint(index * fortuneStep - fortuneStep / 2)
+							- const end = fortunePoint(index * fortuneStep + fortuneStep / 2)
+							g.fortune__sector(class=prize.spin === 1 ? 'fortune__sector_cash' : prize.spin === 2 ? 'fortune__sector_bonus' : '' data-kind=prize.kind data-value=prize.value data-label=prize.label data-spin=prize.spin)
+								path(d=`M350,350 L${start.join(',')} A315,315 0 0,1 ${end.join(',')} Z`)
+								g(transform=`rotate(${index * fortuneStep} 350 350)`)
+									text(x="350" y="108" transform="rotate(90 350 108)" text-anchor="middle" dominant-baseline="middle")= prize.label
+					circle.fortune__disk-center(cx="350" cy="350" r="126")
+				svg.fortune__rim(viewBox="0 0 700 700" aria-hidden="true")
+					circle.fortune__rim-outer(cx="350" cy="350" r="330")
+					circle.fortune__rim-inner(cx="350" cy="350" r="316")
+					each light in Array.from({ length: 48 }, (_, index) => index)
+						- const angle = 2 * Math.PI * light / 48
+						circle.fortune__rim-light(cx=350 + 327 * Math.sin(angle) cy=350 - 327 * Math.cos(angle) r="3.5" class=light % 3 === 0 ? 'is-bright' : '')
+				svg.fortune__pointer(viewBox="0 0 66 88" aria-hidden="true")
+					path(d="M4 5h58L33 81Z")
+					path.fortune__pointer-highlight(d="M13 13h18L33 62Z")
+				button.fortune__center(type="button" aria-label="Spin the wheel")
+					span CLAPS
+					b Spin
+			p.fortune__caption Your moment starts with a spin
+	p.fortune__status(role="status" aria-live="polite")
+	dialog.fortune__dialog(aria-labelledby="fortune-result-title" aria-describedby="fortune-result-detail")
+		button.fortune__close(type="button" aria-label="Close result") ×
+		img.fortune__prize-img(src="img/fortune-coin.svg" alt="")
+		p.fortune__eyebrow.fortune__result-step First spin complete
+		h3.fortune__result-title#fortune-result-title Nice first spin.
+		p.fortune__prize 700 000 <span>₴</span>
+		p.fortune__extra(hidden) + 600 free spins
+		p.fortune__result-detail#fortune-result-detail Your first bonus is in. You have one more spin.
+		button.fortune__continue.btn(type="button") Spin again
+		p.fortune__dialog-note Demo result
+
+section.wheels.section(lang="en" aria-label="High Roller Wheels")
+	.wheels__wrapper(tabindex="0" aria-label="Wheel cards")
+		.wheels__list
+			.wheels__item.wheels__item_free
+				.wheels__item-inner
+					.wheels__item-front
+						.wheels__item-content
+							.wheels__item-title.wheels__item-box FREE<br>VIP WHEEL
+							.wheels__item-text.wheels__item-box Spin daily
+						button(type="button").wheels__item-btn TERMS
+					.wheels__item-back
+						.wheels__item-back-content
+							.wheels__item-back-row
+								.wheels__item-back-label Wheel available:
+								.wheels__item-back-val ONCE EVERY 24 HOURS
+							.wheels__item-back-row.wheels__item-back-row--bonus
+								.wheels__item-back-label Bonuses:
+								.wheels__item-back-val UP TO 75 <span>VIP FS</span>
+								.wheels__item-back-val UP TO <span>99%</span> DEPOSIT BONUS
+						button.wheels__item-back-btn(type="button" aria-label="Back to the wheel")
+							<svg width="21" height="15" viewBox="0 0 21 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.292893 6.65691C-0.0976311 7.04743 -0.0976311 7.6806 0.292893 8.07112L6.65685 14.4351C7.04738 14.8256 7.68054 14.8256 8.07107 14.4351C8.46159 14.0446 8.46159 13.4114 8.07107 13.0209L2.41421 7.36401L8.07107 1.70716C8.46159 1.31664 8.46159 0.68347 8.07107 0.292946C7.68054 -0.0975785 7.04738 -0.0975785 6.65685 0.292946L0.292893 6.65691ZM21 7.36401V6.36401H1V7.36401V8.36401H21V7.36401Z"/>
+							</svg>
+
+			.wheels__item.wheels__item_premium
+				.wheels__item-inner
+					.wheels__item-front
+						.wheels__item-content
+							.wheels__item-title.wheels__item-box PREMIUM<br>WHEEL
+							.wheels__item-text.wheels__item-box Buy with coins daily
+						button(type="button").wheels__item-btn TERMS
+					.wheels__item-back
+						.wheels__item-back-content
+							.wheels__item-back-row
+								.wheels__item-back-label Cost:
+								.wheels__item-back-val 3000 COINS
+							.wheels__item-back-row
+								.wheels__item-back-label Wheel available:
+								.wheels__item-back-val ONCE EVERY 24 HOURS
+							.wheels__item-back-row.wheels__item-back-row--bonus
+								.wheels__item-back-label Bonuses:
+								.wheels__item-back-val <span>VIP</span> CASH
+								.wheels__item-back-val UP TO 77 <span>VIP FS</span>
+								.wheels__item-back-val UP TO <span>250%</span> DEPOSIT BONUS
+						button.wheels__item-back-btn(type="button" aria-label="Back to the wheel")
+							<svg width="21" height="15" viewBox="0 0 21 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.292893 6.65691C-0.0976311 7.04743 -0.0976311 7.6806 0.292893 8.07112L6.65685 14.4351C7.04738 14.8256 7.68054 14.8256 8.07107 14.4351C8.46159 14.0446 8.46159 13.4114 8.07107 13.0209L2.41421 7.36401L8.07107 1.70716C8.46159 1.31664 8.46159 0.68347 8.07107 0.292946C7.68054 -0.0975785 7.04738 -0.0975785 6.65685 0.292946L0.292893 6.65691ZM21 7.36401V6.36401H1V7.36401V8.36401H21V7.36401Z"/>
+							</svg>
+
+			.wheels__item.wheels__item_elite
+				.wheels__item-inner
+					.wheels__item-front
+						.wheels__item-content
+							.wheels__item-title.wheels__item-box ELITE<br>WHEEL
+							.wheels__item-text.wheels__item-box Every Friday — HighRoller<br>bonuses for deposits of 3000₴ or more
+						button(type="button").wheels__item-btn TERMS
+					.wheels__item-back
+						.wheels__item-back-content
+							.wheels__item-back-row
+								.wheels__item-back-label Cost:
+								.wheels__item-back-val WITH A 3000₴ DEPOSIT
+							.wheels__item-back-row
+								.wheels__item-back-label Wheel available:
+								.wheels__item-back-val EVERY FRIDAY
+							.wheels__item-back-row.wheels__item-back-row--bonus
+								.wheels__item-back-label Bonuses:
+								.wheels__item-back-val <span>VIP</span> CASH
+								.wheels__item-back-val <span>100 FS</span> AT 30₴ EACH
+								.wheels__item-back-val <span>100 FS</span> AT 5₴ EACH
+						button.wheels__item-back-btn(type="button" aria-label="Back to the wheel")
+							<svg width="21" height="15" viewBox="0 0 21 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.292893 6.65691C-0.0976311 7.04743 -0.0976311 7.6806 0.292893 8.07112L6.65685 14.4351C7.04738 14.8256 7.68054 14.8256 8.07107 14.4351C8.46159 14.0446 8.46159 13.4114 8.07107 13.0209L2.41421 7.36401L8.07107 1.70716C8.46159 1.31664 8.46159 0.68347 8.07107 0.292946C7.68054 -0.0975785 7.04738 -0.0975785 6.65685 0.292946L0.292893 6.65691ZM21 7.36401V6.36401H1V7.36401V8.36401H21V7.36401Z"/>
+							</svg>
+	.wheels__controls
+		button.wheels__btn_prev.active(type="button" aria-label="Previous wheel" data-translate="wheelsBtnPrev")
+			<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M8.07617 1.30078L3.49121 6.65039H15.3174V8.65039H3.49121L8.07617 14L6.55859 15.3008L0 7.65039L6.55859 0L8.07617 1.30078Z" fill="currentColor"/>
+			</svg>
+		.wheels__pagination(aria-live="polite" aria-atomic="true") <span>1</span> / 3
+		button.wheels__btn_next(type="button" aria-label="Next wheel" data-translate="wheelsBtnNext") Next
+			<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M8.07617 1.30078L3.49121 6.65039H15.3174V8.65039H3.49121L8.07617 14L6.55859 15.3008L0 7.65039L6.55859 0L8.07617 1.30078Z" fill="currentColor"/>
+			</svg>

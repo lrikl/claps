@@ -1,0 +1,202 @@
+$accent: #e5ff3a
+$surface: #181920
+$font: 'Sofia Sans', sans-serif
+
+.wheels
+	min-width: 0
+	font-family: $font
+	color: white
+	&__wrapper
+		width: 100%
+		overflow-x: auto
+		scroll-snap-type: x mandatory
+		scrollbar-width: none
+		padding: 24px 0
+		border-radius: 12px
+		&::-webkit-scrollbar
+			display: none
+	&__list
+		position: relative
+		display: flex
+		gap: 24px
+		width: 100%
+	&__item
+		position: relative
+		flex: 0 0 calc((100% - 48px) / 3)
+		min-width: 0
+		aspect-ratio: 462 / 269
+		min-height: 260px
+		perspective: 1000px
+		scroll-snap-align: start
+		&.is-flipped .wheels__item-inner
+			transform: rotateY(180deg)
+	&__item-inner
+		position: relative
+		width: 100%
+		height: 100%
+		transition: transform .55s ease
+		transform-style: preserve-3d
+	&__item-front, &__item-back
+		position: absolute
+		inset: 0
+		width: 100%
+		height: 100%
+		border-radius: 12px
+		border: 1px solid rgba(229, 255, 58, .2)
+		backface-visibility: hidden
+		-webkit-backface-visibility: hidden
+		background-color: $surface
+	&__item-front
+		display: flex
+		flex-direction: column
+		justify-content: space-between
+		padding: 20px 16px
+		transform: translateZ(1px)
+		background-position: center
+		background-size: cover
+		&::before
+			content: ''
+			position: absolute
+			inset: 0
+			border-radius: inherit
+			background: linear-gradient(90deg, rgba(20,20,26,.85), rgba(20,20,26,.4) 45%, transparent 75%)
+			pointer-events: none
+		> *
+			position: relative
+			z-index: 1
+	&__item_free &__item-front
+		background-image: url('../img/wheel-free.jpg')
+	&__item_premium &__item-front
+		background-image: url('../img/wheel-premium.jpg')
+	&__item_elite &__item-front
+		background-image: url('../img/wheel-elite.jpg')
+	&__item-content
+		width: 52%
+		display: flex
+		flex-direction: column
+		gap: 12px
+	&__item-title
+		font-size: clamp(20px, 1.65vw, 30px)
+		font-weight: 900
+		line-height: 1.05
+		color: $accent
+	&__item-text
+		font-size: 15px
+		line-height: 1.25
+	&__item-btn, &__item-back-btn, &__btn_prev, &__btn_next
+		font-family: $font
+		font-weight: 700
+		font-size: 15px
+		cursor: pointer
+		border: 1px solid $accent
+		border-radius: 6px
+		color: $accent
+		background: $surface
+		min-height: 44px
+		padding: 10px 16px
+		transition: background .2s, color .2s
+		&:hover:not(:disabled)
+			background: $accent
+			color: #2a2e0a
+		&:focus-visible
+			outline: 2px solid $accent
+			outline-offset: 3px
+	&__item-btn
+		width: 48%
+		max-width: 182px
+	&__item-back
+		transform: rotateY(180deg) translateZ(1px)
+		padding: 18px
+		display: flex
+		align-items: flex-end
+		gap: 8px
+		background-image: radial-gradient(ellipse at bottom right, #373754, transparent 75%)
+	&__item-back-content
+		display: flex
+		flex-direction: column
+		gap: 10px
+		width: 100%
+		height: 100%
+		min-width: 0
+	&__item-back-row--bonus
+		margin-top: auto
+	&__item-back-label
+		color: rgba(255,255,255,.65)
+		font-size: 13px
+		line-height: 1.25
+		margin-bottom: 3px
+	&__item-back-val
+		font-size: clamp(15px, 1.15vw, 20px)
+		font-weight: 700
+		line-height: 1.3
+		span
+			color: $accent
+	&__item-back-btn
+		flex: 0 0 44px
+		padding: 10px
+		svg
+			width: 20px
+			fill: currentColor
+	&__controls
+		display: flex
+		align-items: center
+		justify-content: space-between
+		gap: 16px
+		margin: 16px auto 0
+		max-width: 462px
+		&[hidden]
+			display: none
+	&__btn_prev, &__btn_next
+		display: flex
+		align-items: center
+		gap: 10px
+		svg
+			width: 16px
+			height: 16px
+			color: currentColor
+		&:disabled
+			color: rgba(255,255,255,.35)
+			border-color: rgba(255,255,255,.15)
+			cursor: default
+	&__btn_next svg
+		transform: scaleX(-1)
+	&__pagination
+		font-size: 16px
+		color: rgba(255,255,255,.55)
+		span
+			color: white
+
+@media (max-width: 1040px)
+	.wheels
+		&__wrapper
+			max-width: 462px
+			margin: 0 auto
+		&__list
+			gap: 16px
+		&__item
+			flex-basis: 100%
+			height: 300px
+			aspect-ratio: auto
+		&__item-title
+			font-size: clamp(22px, 5vw, 28px)
+		&__item-front
+			background-size: cover
+			background-repeat: no-repeat
+			background-position: right center
+		&__item-back-val
+			font-size: 18px
+
+@media (max-width: 359px)
+	.wheels
+		&__item-front, &__item-back
+			padding: 14px
+		&__item-title
+			font-size: 21px
+		&__item-text
+			font-size: 13px
+		&__item-back-val
+			font-size: 16px
+
+@media (prefers-reduced-motion: reduce)
+	.wheels__item-inner
+		transition: none
